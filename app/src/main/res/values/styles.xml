@@ -1,0 +1,16 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionBarTabTextStyle">@style/textStyle</item>
+    </style>
+
+    <style name="textStyle" parent="AppTheme">
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+</resources>
