@@ -109,11 +109,11 @@ public class MainActivity extends AppCompatActivity
 
 
         //Criando um novo botão que fará a visita ao site do aluno
-        MenuItem siteAluno = menu.add("Visitar Site");
+        MenuItem itemSite = menu.add("Visitar Site");
         //ACTION_VIEW se refere a visualizar algo, a partir disso o android retornara a função adequada
         Intent intentSite = new Intent(Intent.ACTION_VIEW);
         //'Linkando' nossa intent com a botão 'Visitar Site'
-        siteAluno.setIntent(intentSite);
+        itemSite.setIntent(intentSite);
         //Para o android conseguir realizar o direcionamento correto é preciso passar uma pista sobre o que ele está lidando
         String siteUrl = aluno.getSite();
         if (!siteUrl.startsWith("http://"))
@@ -128,10 +128,21 @@ public class MainActivity extends AppCompatActivity
         */
         intentSite.setData(Uri.parse(siteUrl));
 
+        //Criando Item para Enviar SMS
+        MenuItem itemSMS = menu.add("Enviar SMS");
+        Intent intentSMS = new Intent(Intent.ACTION_VIEW);
+        intentSMS.setData(Uri.parse("sms:" + aluno.getTelefone()));
+        itemSMS.setIntent(intentSMS);
 
 
-        MenuItem deletarAluno = menu.add("Deletar Aluno");
-        deletarAluno.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener()
+        //Criando Item para visualizar o Endereço
+        MenuItem itemMapa = menu.add("Ver Endereço no Mapa");
+        Intent intentMapa = new Intent(Intent.ACTION_VIEW);
+        intentMapa.setData(Uri.parse("geo:0,0?q=" + aluno.getEndereco()));
+        itemMapa.setIntent(intentMapa);
+
+        MenuItem itemDeletar = menu.add("Deletar Aluno");
+        itemDeletar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener()
         {
             @Override
             public boolean onMenuItemClick(MenuItem item)
