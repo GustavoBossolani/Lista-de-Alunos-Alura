@@ -1,9 +1,13 @@
 package br.com.listalunos.gustavo.listaalunos;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -108,6 +112,35 @@ public class MainActivity extends AppCompatActivity
         final Aluno aluno = (Aluno) lvAlunos.getItemAtPosition(info.position);
 
 
+        //Aqui estamos colocando um ClickListener no MenuItem por que é preciso fazer uma verificação antes de fazer a ligação
+        MenuItem itemLigar = menu.add("Ligar");
+        itemLigar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick(MenuItem item)
+            {
+                //Criando um array de strings que vai armazenar nosso 'kit' de permissões
+                String[] permissions = {Manifest.permission.CALL_PHONE};
+                //Verificando se a permissão para usar o aplicativo de ligação foi aprovada
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE)
+                        != PackageManager.PERMISSION_GRANTED)
+                {
+                    //Caso não for aprovada um pop up pedindo-a será aberto com a função abaixo retornando um request code
+                    //Request code é um código que faz referência a determinadas ações
+                    ActivityCompat.requestPermissions(MainActivity.this, permissions, 123);
+                }else
+                    {
+                        //Executando a ligação
+                        Intent intentLigar = new Intent(Intent.ACTION_CALL);
+                        intentLigar.setData(Uri.parse("tel:" + aluno.getTelefone()));
+                        startActivity(intentLigar);
+                    }
+
+                return false;
+            }
+        });
+
+
         //Criando um novo botão que fará a visita ao site do aluno
         MenuItem itemSite = menu.add("Visitar Site");
         //ACTION_VIEW se refere a visualizar algo, a partir disso o android retornara a função adequada
@@ -155,5 +188,19 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    //Este método é chamado logo em seguida quando uma permissão requisitada é aceitada
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Caso eu tenha mais de uma permissão é preciso realizar um if comparando o requestCode para não executar alguma ação errada
+        if (requestCode == 123)
+        {
+          //faz a ligação
+            Toast.makeText(MainActivity.this, "Permissão Consedida, tente fazer a ligação novamente", Toast.LENGTH_SHORT).show();
+        }
     }
 }
