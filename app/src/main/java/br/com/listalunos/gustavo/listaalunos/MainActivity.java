@@ -2,6 +2,7 @@ package br.com.listalunos.gustavo.listaalunos;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -73,7 +74,6 @@ public class MainActivity extends AppCompatActivity
         List<Aluno> alunos = dao.buscarAlunos();
         dao.close();
 
-
         ArrayAdapter<Aluno> adapter = new ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, alunos);
         lvAlunos.setAdapter(adapter);
     }
@@ -88,17 +88,54 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, final ContextMenu.ContextMenuInfo menuInfo)
     {
-        MenuItem deletar = menu.add("Deletar Aluno");
-        deletar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener()
+
+        /*
+            Intent Explícita:
+            A Intent que explicita qual é a activity que seremos direcionados, chamamos de Intent Explícita.
+            Exp: Intent itExplicita = new Intent(primeiraActivity.this, segundaActivity.class);
+
+            Intent Implícita:
+            Quando dizemos que o usuários irá escolher e nós só sabemos qual ação queremos realizar,
+            nós iremos utilizar uma Intent implícita. Você informa para o Android 'quero abrir um site'
+            e ele fará o possível para executar a ação.
+            Exp: Int itImplícita = new Intent(Intent.ACTION_VIEW);
+         */
+
+        //Aqui estamos falando que a informação menuInfo vem de dentro de um Adapter
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+
+        //Obtendo o objeto que foi clicado através do info.postion e jogando a uma variável do tipo Aluno
+        final Aluno aluno = (Aluno) lvAlunos.getItemAtPosition(info.position);
+
+
+        //Criando um novo botão que fará a visita ao site do aluno
+        MenuItem siteAluno = menu.add("Visitar Site");
+        //ACTION_VIEW se refere a visualizar algo, a partir disso o android retornara a função adequada
+        Intent intentSite = new Intent(Intent.ACTION_VIEW);
+        //'Linkando' nossa intent com a botão 'Visitar Site'
+        siteAluno.setIntent(intentSite);
+        //Para o android conseguir realizar o direcionamento correto é preciso passar uma pista sobre o que ele está lidando
+        String siteUrl = aluno.getSite();
+        if (!siteUrl.startsWith("http://"))
+        {
+            siteUrl = "http://" + siteUrl;
+        }
+
+        /*
+            Nesta parte para a intent implicita funcionar é OBRIGATÓRIO a declaração da Uri(Identificador Uniforme de recursos) para o Android saber qual função acionar;
+            A Uri é uma forma de identificar todos os tipo de recursos presentes no sistema operacional Android;
+            No comando 'setData()' é preciso retornar uma Uri e para converter um protocólo 'http' como um String para Uri, é preciso usar o Uri.parse.
+        */
+        intentSite.setData(Uri.parse(siteUrl));
+
+
+
+        MenuItem deletarAluno = menu.add("Deletar Aluno");
+        deletarAluno.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener()
         {
             @Override
             public boolean onMenuItemClick(MenuItem item)
             {
-                //Aqui estamos falando que a informação menuInfo vem de dentro de um Adapter
-                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-                //Obtendo o objeto que foi clicado através do info.postion e jogando a uma variável do tipo Aluno
-                Aluno aluno = (Aluno) lvAlunos.getItemAtPosition(info.position);
-
                 AlunoDAO dao = new AlunoDAO(MainActivity.this);
                 dao.deletar(aluno);
                 dao.close();
