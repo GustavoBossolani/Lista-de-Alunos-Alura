@@ -1,25 +1,40 @@
 package br.com.listalunos.gustavo.listaalunos;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
+
+import java.io.File;
 
 import br.com.listalunos.gustavo.listaalunos.dao.AlunoDAO;
 import br.com.listalunos.gustavo.listaalunos.modelo.Aluno;
 
 public class FormularioActivity extends AppCompatActivity
 {
+    public static final int REQUEST_CAMERA = 456;
     private FormularioHelper helper;
+    private TextInputLayout tilNome;
+    private FloatingActionButton fabTirarFoto;
+    private String caminhoFoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario);
+
+        tilNome = findViewById(R.id.tilNome);
+        fabTirarFoto = findViewById(R.id.fabTirarFoto);
 
         helper = new FormularioHelper(this);
 
@@ -32,6 +47,66 @@ public class FormularioActivity extends AppCompatActivity
             helper.preencherFormulario(aluno);
         }
 
+
+        fabTirarFoto.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                //Esta constante se refere a ação de buscar uma aplicação para tirar uma foto
+                Intent intentCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                /*
+                    A variável caminhoFoto contém o caminho e o nome do arquivo de foto,
+                    o  comando getEternalDir indica a pasta onde nossa aplicação esta salvando arquivos
+                    estamos passando null no parâmetro pois não queremos subpastas;
+
+                    Estamos usando o comando System.currentTimeMillis pois se o nome da foto for estático(padrão)
+                    a foto sempre sera sobrescrita e nunca teremos fotos unicas na aplicação, para isso
+                    usamos o currentMillis para gerar nomes dinâmicos que não se repetem.
+                 */
+                caminhoFoto = getExternalFilesDir(null) + "/" + System.currentTimeMillis() + ".jpg";
+                //Criando um novo objeto do tipo File que irá cuidar de salvar nossa foto a partir do caminho passado através de uma String
+                File arquivoFoto = new File(caminhoFoto);
+
+                /*
+                    Para conseguirmos salvar a foto é preciso usar o comando putExtra para que ao tirar a foto,
+                    a mesma venha 'pendurada' para ser recuperada;
+
+                    Estamos usando no primeiro parâmentro no puExtra uma constante acordada como padrão para salvar fotos,
+                    pois existem diversos aplicativos para tirar fotos e cada um dele pode possuir uma chave de acesso diferente
+                    e recuperár arquivos de foto seria um grande problema;
+
+                    O segundo parâmetro é o caminho em que a foto será salva, lembrando que cada aplicação só poderá 'escrever' dentro de sua própria
+                    pasta raiz podendo também conter subpastas;
+
+                    Ainda no segundo parâmentro do comando putExtra, é preciso passar uma Uri indicando aonde será salvo nosso arquivo de foto,
+                    passando como parâmetro um objeto do tipo File contendo nele o caminho e o nome do arquivo foto.
+                */
+                intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(arquivoFoto));
+
+                /*
+                    Aqui precisamos usar o método para startActivityForResult pois perdemos o controle de nossa activity (Ciclo de vida),
+                    E queremos também um jeito de saber quando a foto foi tirada.
+                */
+                startActivityForResult(intentCamera, REQUEST_CAMERA);
+                //Não podemos abrir a foto quando ainda não a temos, para isso é preciso chamar o método onActivityResult()
+            }
+        });
+    }
+
+    //Aqui recebemos o 'status' da ação de tirar a foto
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        //Aqui estamos checando caso a foto foi salva, para não criarmos um bitmap através de um arquivo nulo
+        if (resultCode == Activity.RESULT_OK)
+        {
+            if (requestCode == REQUEST_CAMERA)
+            {
+                //Montando a foto
+                helper.carregarFoto(caminhoFoto);
+            }
+        }
     }
 
     @Override

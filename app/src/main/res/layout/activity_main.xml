@@ -31,6 +31,7 @@
         android:clickable="true"
         android:stateListAnimator="@null"
         app:backgroundTint="@color/colorPrimary"
+        app:elevation="8dp"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
