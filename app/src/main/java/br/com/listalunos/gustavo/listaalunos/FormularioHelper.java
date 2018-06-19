@@ -73,5 +73,10 @@ public class FormularioHelper
             //Associando o valor do caminhoFoto a ImageView
             ivPerfil.setTag(caminhoFoto);
         }
+        else
+            {
+                ivPerfil.setImageResource(R.drawable.ic_person_white_48dp);
+                ivPerfil.setBackgroundColor(Color.argb(255, 73, 89,154));
+            }
     }
 }
