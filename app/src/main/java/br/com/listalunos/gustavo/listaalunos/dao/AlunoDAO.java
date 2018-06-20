@@ -128,4 +128,17 @@ public class AlunoDAO extends SQLiteOpenHelper
         db.update("Alunos", dados, "id =?", params);
 
     }
+
+    public boolean ehAluno(String telefone)
+    {
+        //Criando instância do banco de dados
+        SQLiteDatabase db = getReadableDatabase();
+        //Procurando e comparando os telefones no banco
+        Cursor cursor = db.rawQuery("SELECT * FROM Alunos WHERE telefone=?", new String[]{telefone});
+        //Retornando a quantidade de telefones que são iguais ao da pesquisa
+        int resultado = cursor.getCount();
+        //Fechando a instancia do cursor e liberando memória
+        cursor.close();
+        return resultado > 0;
+    }
 }

@@ -26,6 +26,7 @@ import java.util.List;
 import br.com.listalunos.gustavo.listaalunos.adapter.AlunosAdapter;
 import br.com.listalunos.gustavo.listaalunos.dao.AlunoDAO;
 import br.com.listalunos.gustavo.listaalunos.modelo.Aluno;
+import br.com.listalunos.gustavo.listaalunos.receiver.SMSReceiver;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -43,6 +44,14 @@ public class MainActivity extends AppCompatActivity
         fabAdcionar = findViewById(R.id.fabAdcionar);
         lvAlunos = findViewById(R.id.lvAlunos);
         carregarLista();
+
+        //Fazendo a verificação de permissão apra recebimento de SMS
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED)
+        {
+            String[] permissions = {Manifest.permission.RECEIVE_SMS};
+            ActivityCompat.requestPermissions(this, permissions, 456 );
+        }
+
 
 
         fabAdcionar.setOnClickListener(new View.OnClickListener()
