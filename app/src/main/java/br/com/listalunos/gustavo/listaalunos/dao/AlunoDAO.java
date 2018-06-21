@@ -35,13 +35,13 @@ public class AlunoDAO extends SQLiteOpenHelper
     public void onCreate(SQLiteDatabase db)
     {
         String SQLite = "CREATE TABLE Alunos(" +
-                "id INTEGER PRIMARY KEY," +
-                " nome TEXT NOT NULL" +
-                ", endereco TEXT," +
+                " id INTEGER PRIMARY KEY," +
+                " nome TEXT NOT NULL," +
+                " endereco TEXT," +
                 " telefone TEXT," +
                 " site TEXT," +
                 " nota REAL," +
-                "caminhoFoto TEXT);";
+                " caminhoFoto TEXT);";
 
         db.execSQL(SQLite);
     }
@@ -126,7 +126,6 @@ public class AlunoDAO extends SQLiteOpenHelper
         ContentValues dados = pegarDadosDoAluno(aluno);
         String[] params = {aluno.getId().toString()};
         db.update("Alunos", dados, "id =?", params);
-
     }
 
     public boolean ehAluno(String telefone)
