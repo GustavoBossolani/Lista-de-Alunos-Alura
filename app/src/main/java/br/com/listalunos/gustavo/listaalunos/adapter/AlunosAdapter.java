@@ -79,8 +79,19 @@ public class AlunosAdapter extends BaseAdapter
         TextView campoTelefone = view.findViewById(R.id.list_item_telefone);
         campoTelefone.setText(aluno.getTelefone());
 
-        ImageView campoFoto = view.findViewById(R.id.list_item_foto);
+        TextView campoEndereco = view.findViewById(R.id.list_item_endereco);
+        if (campoEndereco != null)
+        {
+            campoEndereco.setText(aluno.getEndereco());
+        }
 
+        TextView campoSite = view.findViewById(R.id.list_item_site);
+        if (campoEndereco != null)
+        {
+            campoSite.setText(aluno.getSite());
+        }
+
+        ImageView campoFoto = view.findViewById(R.id.list_item_foto);
         //Para recuperar a foto do usuário, usamos o código do FormulárioHelper para apontar o diretório da imagem
         String caminhoFoto = aluno.getCaminhoFoto();
         if (caminhoFoto != null)
