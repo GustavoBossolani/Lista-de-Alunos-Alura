@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import br.com.listalunos.gustavo.listaalunos.MainActivity;
 import br.com.listalunos.gustavo.listaalunos.R;
 import br.com.listalunos.gustavo.listaalunos.modelo.Aluno;
 

@@ -3,7 +3,6 @@ package br.com.listalunos.gustavo.listaalunos;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -15,22 +14,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import br.com.listalunos.gustavo.listaalunos.adapter.AlunosAdapter;
-import br.com.listalunos.gustavo.listaalunos.converter.AlunoConverter;
 import br.com.listalunos.gustavo.listaalunos.dao.AlunoDAO;
 import br.com.listalunos.gustavo.listaalunos.modelo.Aluno;
-import br.com.listalunos.gustavo.listaalunos.receiver.SMSReceiver;
 
-public class MainActivity extends AppCompatActivity
+public class ListaAlunosActivity extends AppCompatActivity
 {
 
     private FloatingActionButton fabAdcionar;
@@ -41,7 +35,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_lista_alunos);
 
         fabAdcionar = findViewById(R.id.fabAdcionar);
         lvAlunos = findViewById(R.id.lvAlunos);
@@ -61,7 +55,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                Intent it = new Intent(MainActivity.this, FormularioActivity.class);
+                Intent it = new Intent(ListaAlunosActivity.this, FormularioActivity.class);
                 startActivity(it);
             }
         });
@@ -73,7 +67,7 @@ public class MainActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> lista, View item, int position, long id)
             {
                 Aluno aluno = (Aluno) lvAlunos.getItemAtPosition(position);
-                Intent itVaiProFormulario = new Intent(MainActivity.this, FormularioActivity.class);
+                Intent itVaiProFormulario = new Intent(ListaAlunosActivity.this, FormularioActivity.class);
                 itVaiProFormulario.putExtra("aluno", aluno);
                 startActivity(itVaiProFormulario);
             }
@@ -98,6 +92,11 @@ public class MainActivity extends AppCompatActivity
        {
            case R.id.lista_enviar_notas:
                new EnviaAlunosTask(this).execute();
+               break;
+
+           case  R.id.lista_verificar_provas:
+               Intent itProvas = new Intent(ListaAlunosActivity.this, ProvasActivity.class);
+               startActivity(itProvas);
                break;
        }
         return super.onOptionsItemSelected(item);
@@ -154,12 +153,12 @@ public class MainActivity extends AppCompatActivity
                 //Criando um array de strings que vai armazenar nosso 'kit' de permissões
                 String[] permissions = {Manifest.permission.CALL_PHONE};
                 //Verificando se a permissão para usar o aplicativo de ligação foi aprovada
-                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE)
+                if (ActivityCompat.checkSelfPermission(ListaAlunosActivity.this, Manifest.permission.CALL_PHONE)
                         != PackageManager.PERMISSION_GRANTED)
                 {
                     //Caso não for aprovada um pop up pedindo-a será aberto com a função abaixo retornando um request code
                     //Request code é um código que faz referência a determinadas ações
-                    ActivityCompat.requestPermissions(MainActivity.this, permissions, 123);
+                    ActivityCompat.requestPermissions(ListaAlunosActivity.this, permissions, 123);
                 }else
                     {
                         //Executando a ligação
@@ -212,7 +211,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemClick(MenuItem item)
             {
-                AlunoDAO dao = new AlunoDAO(MainActivity.this);
+                AlunoDAO dao = new AlunoDAO(ListaAlunosActivity.this);
                 dao.deletar(aluno);
                 dao.close();
                 carregarLista();
@@ -232,7 +231,7 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == 123)
         {
           //faz a ligação
-            Toast.makeText(MainActivity.this, "Permissão Consedida, tente fazer a ligação novamente", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ListaAlunosActivity.this, "Permissão Consedida, tente fazer a ligação novamente", Toast.LENGTH_SHORT).show();
         }
     }
 }
