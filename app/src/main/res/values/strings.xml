@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Lista de Alunos Alura</string>
     <string name="avaliacao_text">Classifique sua experiência com o app:</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,12 +18,16 @@ import java.io.File;
 
 import br.com.listalunos.gustavo.listaalunos.dao.AlunoDAO;
 import br.com.listalunos.gustavo.listaalunos.modelo.Aluno;
+import br.com.listalunos.gustavo.listaalunos.retrofit.InicializadorRetrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FormularioActivity extends AppCompatActivity
 {
     public static final int REQUEST_CAMERA = 456;
+    public static final String TITULO_APPBAR = "Formulário";
     private FormularioHelper helper;
-    private TextInputLayout tilNome;
     private FloatingActionButton fabTirarFoto;
     private String caminhoFoto;
 
@@ -32,8 +36,8 @@ public class FormularioActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario);
+        setTitle(TITULO_APPBAR);
 
-        tilNome = findViewById(R.id.tilNome);
         fabTirarFoto = findViewById(R.id.fabTirarFoto);
 
         helper = new FormularioHelper(this);
@@ -129,10 +133,24 @@ public class FormularioActivity extends AppCompatActivity
 
                 if(aluno.getId() != null)
                 {
-                    alunoDAO.editar(aluno);
-                }else {alunoDAO.adcionar(aluno);}
+                    alunoDAO.altera(aluno);
+                }else {alunoDAO.insere(aluno);}
 
                 alunoDAO.close();
+                //new InsereAlunoTask(aluno).execute();
+
+                Call<Void> call = new InicializadorRetrofit().getAlunoService().insere(aluno);
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Log.i("onResponse", "requisição com o servidor Funcionou!");
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.e("onFailure", "requisição com o servidor Falhou!" );
+                    }
+                });
 
                 Toast.makeText(getApplicationContext(), "Aluno " + aluno.getNome() + " Salvo!", Toast.LENGTH_SHORT).show();
                 finish();

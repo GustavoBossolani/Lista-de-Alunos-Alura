@@ -1,10 +1,9 @@
 package br.com.listalunos.gustavo.listaalunos;
 
-import android.support.v4.app.Fragment;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import br.com.listalunos.gustavo.listaalunos.fragments.DetalhesProvasFragment;
 import br.com.listalunos.gustavo.listaalunos.fragments.ListaProvasFragment;

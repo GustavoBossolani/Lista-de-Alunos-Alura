@@ -125,7 +125,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Site"
-            android:inputType="textCapSentences|textAutoCorrect|textAutoComplete|textWebEmailAddress" />
+            android:inputType="textAutoCorrect|textAutoComplete|textWebEmailAddress" />
     </android.support.design.widget.TextInputLayout>
 
     <TextView

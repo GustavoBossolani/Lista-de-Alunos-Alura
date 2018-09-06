@@ -1,21 +1,33 @@
 package br.com.listalunos.gustavo.listaalunos.modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 
 /*
     Aqui é preciso implementar a interface Serializable para que o java consiga transformar esta classe em binário
     assim sendo possível passar informações do objeto entre uma activity e outra
 */
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Aluno implements Serializable{
 
-public class Aluno implements Serializable
-{
-    public Long id;
+    public String id;
     public String Nome;
     public String Endereco;
     public String Telefone;
     public String Site;
     private Double nota;
     private String caminhoFoto;
+    private int desativado;
+
+    public int getDesativado() {
+        return desativado;
+    }
+
+    public void setDesativado(int desativado) {
+        this.desativado = desativado;
+    }
 
     @Override
     public String toString()
@@ -23,12 +35,12 @@ public class Aluno implements Serializable
         return getId() + " - " + getNome();
     }
 
-    public Long getId()
+    public String getId()
     {
         return id;
     }
 
-    public void setId(Long id)
+    public void setId(String id)
     {
         this.id = id;
     }
@@ -91,5 +103,9 @@ public class Aluno implements Serializable
     public void setCaminhoFoto(String caminhoFoto)
     {
         this.caminhoFoto = caminhoFoto;
+    }
+
+    public boolean estaDesativado() {
+        return desativado == 1;
     }
 }

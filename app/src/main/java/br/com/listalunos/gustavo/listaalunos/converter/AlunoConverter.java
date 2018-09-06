@@ -79,4 +79,23 @@ public class AlunoConverter
 
         return js.toString();
     }
+
+    public String converterParaJSONCompleto(Aluno aluno) {
+        JSONStringer json = new JSONStringer();
+
+        try {
+            json.object();
+            json.key("nome").value(aluno.getNome());
+            json.key("endereco").value(aluno.getEndereco());
+            json.key("telefone").value(aluno.getTelefone());
+            json.key("site").value(aluno.getSite());
+            json.key("nota").value(aluno.getNota());
+            json.endObject();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return json.toString();
+    }
 }

@@ -1,4 +1,4 @@
-package br.com.listalunos.gustavo.listaalunos;
+package br.com.listalunos.gustavo.listaalunos.tasks;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import br.com.listalunos.gustavo.listaalunos.WebClient;
 import br.com.listalunos.gustavo.listaalunos.converter.AlunoConverter;
 import br.com.listalunos.gustavo.listaalunos.dao.AlunoDAO;
 import br.com.listalunos.gustavo.listaalunos.modelo.Aluno;
